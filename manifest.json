@@ -1,0 +1,28 @@
+{
+    "name":"助手-pomodoro",
+    "description":"manage your time",
+    "version":"0.3",
+    "manifest_version":3,
+    "background":{
+        "service_worker":"background.js"
+    },
+    "permissions":["storage","activeTab", "scripting","notifications","alarms", "contextMenus"],
+    "action":{
+        "default_popup":"popup.html",
+        "default_icon":{
+            "16": "./images/pomo_16.png",
+            "48": "./images/pomo_48.png",
+            "128": "./images/pomo_128.png"
+        }
+    },
+    "icons": {
+        "16": "./images/pomo_16.png",
+        "48": "./images/pomo_48.png",
+        "128": "./images/pomo_128.png"
+    },
+    "content_scripts":[{
+        "matches":["https://*/*","http://*/*"],
+        "js":["./assets/js/common/jquery.min.js"]
+    }]
+    
+}
