@@ -22,11 +22,13 @@ let array = ["minutes", "seconds", "pause", "countdownTimer", "pbutton"];
 let timer = null;
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  console.log("进入 background.js 中的onMessage.addListener");
   const { status, content } = message;
 
-  console.log(message);
+  // console.log(message);
 
   if (status === "start") {
+    //统一再最后发送响应信息
     // sendResponse({
     //   status:message.status
     // })
@@ -54,7 +56,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         minutes: 24,
         seconds: 60,
         countdownTimer: "25:00",
-        status: "start",
+        status: "init",
       },
     });
   } else {
@@ -69,22 +71,22 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     });
   }
 
-    //创建结束通知：待完成
-    
+  //创建结束通知：待完成
+
   chrome.storage.sync.set({
     status,
   });
   //后台播放完成提示音乐
-  if (message.action === "play") {
+  if (message.action === "playend") {
     // audio.play();
   }
   sendResponse();
+  console.log(`离开 background.js 中的onMessage.Listener`)
 });
 
 // 番茄钟倒计时功能
 function countdown({ minutes, seconds, status }) {
   // 设置分钟和秒数
-  // let currentMins = minutes - 1;
   seconds--;
   let currentTimer =
     (minutes < 10 ? "0" : "") +
@@ -93,7 +95,7 @@ function countdown({ minutes, seconds, status }) {
     (seconds < 10 ? "0" : "") +
     seconds;
   // countdownTimer.innerHTML = currentTimer; 拿到
-  console.log("分秒=============", minutes, seconds);
+  // console.log("分秒=============", minutes, seconds);
 
   chrome.storage.sync.set(
     {
@@ -106,17 +108,27 @@ function countdown({ minutes, seconds, status }) {
     },
     function () {
       if (!chrome.runtime.error) {
-        console.log("started");
+        // console.log("started");
       }
     }
   );
 
   //设置badge文本用来显示剩余分钟数
   chrome.storage.sync.get("pomoData", ({ pomoData }) => {
-    chrome.action.setBadgeText({ text: pomoData.minutes.toString() });
+    const {minutes,seconds} = pomoData
+    if(minutes == 0 && seconds == 0){
+      //显示桌面通知
+      showPomoNotification();
+      chrome.action.setBadgeText({text:'✓'});
+      setTimeout(() => {
+        chrome.action.setBadgeText({ text: "" });
+      }, 2000);
+    }else{
+      chrome.action.setBadgeText({ text: currentTimer });
+    }
   });
 
-  console.log(currentTimer);
+  // console.log(currentTimer);
   // count down every second, when a minute is up, countdown one minute
   // when time reaches 0:00, reset
   if (seconds > 0) {
@@ -137,7 +149,7 @@ function countdown({ minutes, seconds, status }) {
       },
       function () {
         if (!chrome.runtime.error) {
-          console.log("started");
+          // console.log("started");
         }
       }
     );
@@ -147,3 +159,12 @@ function countdown({ minutes, seconds, status }) {
 
 //设置badge文本背景颜色
 chrome.action.setBadgeBackgroundColor({ color: "#DD4A48" });
+
+//桌面通知
+function showPomoNotification(){
+  new Notification("番茄钟🍅",{
+    //图标暂时未设置
+    icon:'48.png',
+    body:'你已经完成一个番茄钟！'
+  })
+}

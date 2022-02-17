@@ -1,29 +1,4 @@
-// const btn = document.querySelector("#switch");
-
-// chrome.storage.sync.get("linkOpen", ({ linkOpen }) => {
-//   btn.checked = linkOpen;
-// });
-
-// btn.addEventListener("change", () => {
-//   if (btn.checked) {
-//     chrome.storage.sync.set({ linkOpen: true });
-//   } else {
-//     chrome.storage.sync.set({ linkOpen: false });
-//   }
-//   // 获取当前tab窗口
-//   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-//     chrome.scripting.executeScript({
-//       target: { tabId: tabs[0].id },
-//       func: refreshPage,
-//     });
-//   });
-// });
-
-// // 刷新页面
-// function refreshPage() {
-//   window.location.reload();
-// }
-
+//页面元素获取
 const startBtn = document.getElementById("start-btn");
 const resetBtn = document.getElementById("reset-btn");
 const endBtn = document.getElementById("end-btn");
@@ -74,6 +49,7 @@ document.addEventListener("click", (e) => {
 // 开始按钮-绑定事件
 startBtn.addEventListener("click", () => {
   // countdown(); 在后台运行，需要取出状态
+  //防抖通信
   debounce(start(), 100);
 });
 
@@ -90,8 +66,7 @@ function start() {
         },
       },
       (response) => {
-        console.log(response);
-
+        // console.log(response);
         startBtn.style.display = "none";
         endBtn.style.display = "block";
         getTimer();
@@ -137,9 +112,7 @@ function getTimer() {
             status: "playend",
           },
           (response) => {
-            console.log(response,"**************下面");
             countdownTimer.innerHTML = "25:00";
-            
             startBtn.style.display = "block";
             endBtn.style.display = "none";
             clearTimer();
@@ -215,3 +188,49 @@ chrome.storage.sync.get("pomoData", ({ pomoData }) => {
     countdownTimer.innerHTML = "25:00";
   }
 });
+
+// 轮播图
+let photos = ["../../image/pomo_green.jpeg",
+    "../../image/pomo_sky.png",
+    "../../image/pomo_waterfall.jpg",
+    "../../image/pomo_ocean.jpg",
+    "../../image/pomo_light.jpeg",
+    "../../image/pomo_leaf.jpeg",
+    "../../image/pomo_forest.jpeg",
+    "../../image/pomo_fire.jpeg",
+    "../../image/pomo_crystal.jpg"
+]
+
+let len = photos.length;
+// console.log(len);
+let index = 0;
+document.getElementById('right').addEventListener("click", function() {
+    change_r();
+});
+document.getElementById('left').addEventListener("click", function() {
+    change_l();
+});
+
+function change_l() {
+    index--;
+    if (index < 0) {
+        index = len - 1;
+    }
+    change(index);
+}
+
+function change_r() {
+    index++;
+    if (index == len) {
+        index = 0;
+    }
+    change(index);
+}
+
+function change(n) {
+    document.body.style = "background: url(" + photos[n] + ") no-repeat; background-size: cover; background-position: center;";
+}
+
+let t = setInterval(function() {
+    change_r();
+}, 40000);
