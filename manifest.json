@@ -1,6 +1,6 @@
 {
     "name":"助手-pomodoro",
-    "description":"manage your time",
+    "description":"保持专注，保持仪式感",
     "version":"0.3",
     "manifest_version":3,
     "background":{

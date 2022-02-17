@@ -190,15 +190,15 @@ chrome.storage.sync.get("pomoData", ({ pomoData }) => {
 });
 
 // 轮播图
-let photos = ["../../image/pomo_green.jpeg",
-    "../../image/pomo_sky.png",
-    "../../image/pomo_waterfall.jpg",
-    "../../image/pomo_ocean.jpg",
-    "../../image/pomo_light.jpeg",
-    "../../image/pomo_leaf.jpeg",
-    "../../image/pomo_forest.jpeg",
-    "../../image/pomo_fire.jpeg",
-    "../../image/pomo_crystal.jpg"
+let photos = ["../../images/pomo_green.jpeg",
+    "../../images/pomo_sky.png",
+    "../../images/pomo_waterfall.jpg",
+    "../../images/pomo_ocean.jpg",
+    "../../images/pomo_light.jpeg",
+    "../../images/pomo_leaf.jpeg",
+    "../../images/pomo_forest.jpeg",
+    "../../images/pomo_fire.jpeg",
+    "../../images/pomo_crystal.jpg"
 ]
 
 let len = photos.length;
